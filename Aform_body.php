@@ -240,7 +240,7 @@ class Aform {
 		if ( array_key_exists( $iter, $values ) ) {
 			
 			$attrs = array();
-			if ( in_array( $values[$iter], $selected ) ) {
+			if ( in_array( trim( $values[$iter] ), $selected ) ) {
 				$attrs["selected"] = "selected";
 			}
 			
