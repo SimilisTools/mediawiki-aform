@@ -19,7 +19,7 @@ $GLOBALS['wgMessagesDirs']['Aform'] = __DIR__ . '/i18n';
 $GLOBALS['wgExtensionMessagesFiles']['Aform'] = __DIR__ . '/Aform.i18n.php';
 $GLOBALS['wgExtensionMessagesFiles']['AformMagic'] = __DIR__ . '/Aform.i18n.magic.php';
 
-$wgHooks['ParserFirstCallInit'][] = 'wfRegisterAform';
+$GLOBALS['wgHooks']['ParserFirstCallInit'][] = 'wfRegisterAform';
 
 
 /**
