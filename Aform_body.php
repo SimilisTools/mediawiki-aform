@@ -34,7 +34,7 @@ class Aform {
 				}
 				
 				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) == 0 ) {
+					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
 						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
 					}
 				}
@@ -101,7 +101,7 @@ class Aform {
 				}
 				
 				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) == 0 ) {
+					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
 						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
 					}
 				}
@@ -147,7 +147,7 @@ class Aform {
 				}
 				
 				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) == 0 ) {
+					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
 						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
 					}
 				}
@@ -216,7 +216,7 @@ class Aform {
 				}
 				
 				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) == 0 ) {
+					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
 						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
 					}
 				}
