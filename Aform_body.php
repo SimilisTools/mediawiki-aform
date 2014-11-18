@@ -1,6 +1,6 @@
 <?php
 
-class Alink {
+class Aform {
 
 	private static $attrs_ref_common = array( "rel", "class", "id", "content", "name", "itemprop", "style" ); 
 	private static $attrs_like = array( "data-" );
