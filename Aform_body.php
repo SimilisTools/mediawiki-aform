@@ -58,7 +58,7 @@ class Aform {
 				$page = $attrs["action"];
 				$page = str_replace( " ", "_", $page );
 				$attrs["action"] = $wgArticlePath;
-				$attrs["action"] = str_replace( "$1", urlencode( $page ), $attrs["action"] );
+				$attrs["action"] = str_replace( "$1", $page, $attrs["action"] );
 			}
 		}
 		
