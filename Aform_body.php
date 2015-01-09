@@ -115,7 +115,62 @@ class Aform {
 		
 		return $parser->insertStripItem( $tag, $parser->mStripState );
 	}
+	
+	public static function process_ainput_multi( &$parser, $frame, $args ) {
 
+		$attrs = array();
+		
+		$attrs_ref = array( "type", "list", "size", "readonly", "disabled", "checked", "alt" );
+
+		foreach ( $args as $arg ) {
+			$arg_clean = trim( $frame->expand( $arg ) );
+			$arg_proc = explode( "=", $arg_clean, 2 );
+			
+			if ( count( $arg_proc ) == 1 ){
+				$text = trim( $arg_proc[0] );
+			} else {
+			
+				if ( in_array( trim( $arg_proc[0] ), self::$attrs_ref_common ) ) {
+					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
+				}
+				if ( in_array( trim( $arg_proc[0] ), $attrs_ref ) ) {
+					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
+				}
+				
+				foreach ( self::$attrs_like as $attr_like ) {
+					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
+						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
+					}
+				}
+			}
+		}
+		
+		if ( array_key_exists( "list", $attrs ) ) {
+			
+			$parvals = explode( "&", $attrs["list"] );
+			
+			$tag = "";
+			foreach ( $parvals as $parval ) {
+			
+				$nattrs = $attrs;
+				unset( $nattrs['list'] );
+				$arg_value = explode( "=", $parval, 2 );
+				
+				$nattrs['name'] = $arg_value[0];
+				$nattrs['value'] = $arg_value[1];
+			
+				$tag.= Html::element(
+				'input',
+					$nattrs
+				);
+			}
+		
+			return $parser->insertStripItem( $tag, $parser->mStripState );
+		} else {
+			return '';
+		}
+	}
+	
 	public static function process_aselect( &$parser, $frame, $args ) {
 
 		$attrs = array();
