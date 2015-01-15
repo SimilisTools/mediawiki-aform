@@ -3,7 +3,7 @@ Aform
 
 Convenient parser function for setting up form markup in MediaWiki
 
-[![Latest Stable Version](https://poser.pugx.org/mediawiki/recaptcha/d/total.png)](https://packagist.org/packages/mediawiki/aform)
+[![Latest Stable Version](https://poser.pugx.org/mediawiki/aform/d/total.png)](https://packagist.org/packages/mediawiki/aform)
 
 ## Example
 
