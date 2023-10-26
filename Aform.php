@@ -8,7 +8,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 $GLOBALS['wgExtensionCredits']['parserhook'][] = array(
 	'path' => __FILE__,
 	'name' => 'Aform',
-	'version' => '0.2',
+	'version' => '0.2.1',
 	'url' => 'https://github.com/SimilisTools/mediawiki-Aform',
 	'author' => array( 'Toniher' ),
 	'descriptionmsg' => 'Aform-desc',
