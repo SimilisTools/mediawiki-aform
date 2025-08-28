@@ -1,0 +1,30 @@
+{
+  "name": "Aform",
+  "version": "0.2.1",
+  "author": [
+    "Toniher"
+  ],
+  "url": "https://github.com/SimilisTools/mediawiki-Aform",
+  "descriptionmsg": "Aform-desc",
+  "type": "parserhook",
+  "MessagesDirs": {
+    "Aform": [
+      "i18n"
+    ]
+  },
+  "ExtensionMessagesFiles": {
+    "Aform": "Aform.i18n.php",
+    "AformMagic": "Aform.i18n.magic.php"
+  },
+  "AutoloadClasses": {
+    "Aform": "Aform_body.php",
+    "AformHooks": "includes/Hooks.php"
+  },
+  "Hooks": {
+    "ParserFirstCallInit": [
+      "AformHooks::onParserFirstCallInit"
+    ]
+  },
+  "manifest_version": 2
+}
+
