@@ -1,5 +1,4 @@
-Aform
-===============
+# Aform
 
 Convenient parser function for setting up form markup in MediaWiki
 
@@ -7,6 +6,7 @@ Convenient parser function for setting up form markup in MediaWiki
 
 ## Example
 
+```
 {{#aform:action={{FULLPAGENAME}}|method=get}}
 
 {{#ainput_multi:type=hidden|list=text=House&size=100}}
@@ -16,4 +16,4 @@ Convenient parser function for setting up form markup in MediaWiki
 {{#aselect:name=aninal[]|multiple=multiple|values=Dog,Cat,Mouse|selected=Dog}}
 
 {{#aformend:}}
-
+```
