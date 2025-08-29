@@ -1,325 +1,332 @@
 <?php
 
-class Aform {
-
-	private static $attrs_ref_common = array( "rel", "class", "id", "content", "name", "itemprop", "style" );
-	private static $attrs_like = array( "data-" );
-	private static $protocols = array( "https://", "http://", "ftp://" );
-
-	/**
-	 * @param $parser Parser
-	 * @param $frame PPFrame
-	 * @param $args array
-	 * @return string
-	 */
-	public static function process_aform( &$parser, $frame, $args ) {
-
-		$attrs = array();
-
-		$attrs_ref = array( "method", "action" );
-
-		foreach ( $args as $arg ) {
-			$arg_clean = trim( $frame->expand( $arg ) );
-			$arg_proc = explode( "=", $arg_clean, 2 );
-
-			if ( count( $arg_proc ) == 1 ){
-				$text = trim( $arg_proc[0] );
-			} else {
-
-				if ( in_array( trim( $arg_proc[0] ), self::$attrs_ref_common ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
-				if ( in_array( trim( $arg_proc[0] ), $attrs_ref ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
-
-				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
-						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-					}
-				}
-			}
-		}
-
-		// Code for dealing with internal - external
-		$external = 0;
-		if ( isset( $attrs["action"] ) ) {
-			foreach ( self::$protocols as $protocol ) {
-				$detect = strpos( $attrs["action"], $protocol );
-				if ( is_int( $detect ) ) {
-						$external = 1;
-				}
-			}
-		}
-
-		if ( $external == 0 ) {
-			if ( isset( $attrs["action"] ) ) {
-				global $wgArticlePath;
-				$page = $attrs["action"];
-				$page = str_replace( " ", "_", $page );
-				$attrs["action"] = $wgArticlePath;
-				$attrs["action"] = str_replace( "$1", $page, $attrs["action"] );
-			}
-		}
-
-		$tag = 	Html::openElement(
-			'form',
-				$attrs
-		);
-
-		return $parser->insertStripItem( $tag, $parser->mStripState );
-	}
-
-	public static function process_aformend( &$parser, $frame, $args ) {
-
-		$tag = 	Html::closeElement(
-			'form'
-		);
-
-		return $parser->insertStripItem( $tag, $parser->mStripState );
-	}
-
-	public static function process_ainput( &$parser, $frame, $args ) {
-
-		$attrs = array();
-
-		$attrs_ref = array( "type", "name", "value", "size", "readonly", "disabled", "checked", "alt" );
-
-		foreach ( $args as $arg ) {
-			$arg_clean = trim( $frame->expand( $arg ) );
-			$arg_proc = explode( "=", $arg_clean, 2 );
-
-			if ( count( $arg_proc ) == 1 ){
-				$text = trim( $arg_proc[0] );
-			} else {
-
-				if ( in_array( trim( $arg_proc[0] ), self::$attrs_ref_common ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
-				if ( in_array( trim( $arg_proc[0] ), $attrs_ref ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
-
-				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
-						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-					}
-				}
-			}
-		}
-
-		$tag = 	Html::element(
-			'input',
-				$attrs
-		);
-
-		return $parser->insertStripItem( $tag, $parser->mStripState );
-	}
-
-	public static function process_ainput_multi( &$parser, $frame, $args ) {
-
-		$attrs = array();
-
-		$attrs_ref = array( "type", "list", "size", "readonly", "disabled", "checked", "alt" );
-
-		foreach ( $args as $arg ) {
-			$arg_clean = trim( $frame->expand( $arg ) );
-			$arg_proc = explode( "=", $arg_clean, 2 );
-
-			if ( count( $arg_proc ) == 1 ){
-				$text = trim( $arg_proc[0] );
-			} else {
-
-				if ( in_array( trim( $arg_proc[0] ), self::$attrs_ref_common ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
-				if ( in_array( trim( $arg_proc[0] ), $attrs_ref ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
+class Aform
+{
+    private static $attrs_ref_common = array( "rel", "class", "id", "content", "name", "itemprop", "style" );
+    private static $attrs_like = array( "data-" );
+    private static $protocols = array( "https://", "http://", "ftp://" );
+
+    /**
+     * @param $parser Parser
+     * @param $frame PPFrame
+     * @param $args array
+     * @return string
+     */
+    public static function process_aform(&$parser, $frame, $args)
+    {
+
+        $attrs = array();
+
+        $attrs_ref = array( "method", "action" );
+
+        foreach ($args as $arg) {
+            $arg_clean = trim($frame->expand($arg));
+            $arg_proc = explode("=", $arg_clean, 2);
+
+            if (count($arg_proc) == 1) {
+                $text = trim($arg_proc[0]);
+            } else {
+
+                if (in_array(trim($arg_proc[0]), self::$attrs_ref_common)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
+                if (in_array(trim($arg_proc[0]), $attrs_ref)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
+
+                foreach (self::$attrs_like as $attr_like) {
+                    if (strpos($arg_proc[0], $attr_like) === 0) {
+                        $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                    }
+                }
+            }
+        }
+
+        // Code for dealing with internal - external
+        $external = 0;
+        if (isset($attrs["action"])) {
+            foreach (self::$protocols as $protocol) {
+                $detect = strpos($attrs["action"], $protocol);
+                if (is_int($detect)) {
+                    $external = 1;
+                }
+            }
+        }
+
+        if ($external == 0) {
+            if (isset($attrs["action"])) {
+                global $wgArticlePath;
+                $page = $attrs["action"];
+                $page = str_replace(" ", "_", $page);
+                $attrs["action"] = $wgArticlePath;
+                $attrs["action"] = str_replace("$1", $page, $attrs["action"]);
+            }
+        }
+
+        $tag = 	Html::openElement(
+            'form',
+            $attrs
+        );
+
+        return $parser->insertStripItem($tag);
+    }
+
+    public static function process_aformend(&$parser, $frame, $args)
+    {
+
+        $tag = 	Html::closeElement(
+            'form'
+        );
+
+        return $parser->insertStripItem($tag);
+    }
+
+    public static function process_ainput(&$parser, $frame, $args)
+    {
+
+        $attrs = array();
+
+        $attrs_ref = array( "type", "name", "value", "size", "readonly", "disabled", "checked", "alt" );
+
+        foreach ($args as $arg) {
+            $arg_clean = trim($frame->expand($arg));
+            $arg_proc = explode("=", $arg_clean, 2);
+
+            if (count($arg_proc) == 1) {
+                $text = trim($arg_proc[0]);
+            } else {
+
+                if (in_array(trim($arg_proc[0]), self::$attrs_ref_common)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
+                if (in_array(trim($arg_proc[0]), $attrs_ref)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
+
+                foreach (self::$attrs_like as $attr_like) {
+                    if (strpos($arg_proc[0], $attr_like) === 0) {
+                        $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                    }
+                }
+            }
+        }
+
+        $tag = 	Html::element(
+            'input',
+            $attrs
+        );
+
+        return $parser->insertStripItem($tag);
+    }
+
+    public static function process_ainput_multi(&$parser, $frame, $args)
+    {
+
+        $attrs = array();
+
+        $attrs_ref = array( "type", "list", "size", "readonly", "disabled", "checked", "alt" );
+
+        foreach ($args as $arg) {
+            $arg_clean = trim($frame->expand($arg));
+            $arg_proc = explode("=", $arg_clean, 2);
+
+            if (count($arg_proc) == 1) {
+                $text = trim($arg_proc[0]);
+            } else {
+
+                if (in_array(trim($arg_proc[0]), self::$attrs_ref_common)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
+                if (in_array(trim($arg_proc[0]), $attrs_ref)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
 
-				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
-						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-					}
-				}
-			}
-		}
-
-		if ( array_key_exists( "list", $attrs ) ) {
-
-			$parvals = explode( "&", $attrs["list"] );
-
-			$tag = "";
-			foreach ( $parvals as $parval ) {
-
-				$nattrs = $attrs;
-				unset( $nattrs['list'] );
-				$arg_value = explode( "=", $parval, 2 );
+                foreach (self::$attrs_like as $attr_like) {
+                    if (strpos($arg_proc[0], $attr_like) === 0) {
+                        $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                    }
+                }
+            }
+        }
+
+        if (array_key_exists("list", $attrs)) {
+
+            $parvals = explode("&", $attrs["list"]);
+
+            $tag = "";
+            foreach ($parvals as $parval) {
+
+                $nattrs = $attrs;
+                unset($nattrs['list']);
+                $arg_value = explode("=", $parval, 2);
+
+                $nattrs['name'] = $arg_value[0];
+                $nattrs['value'] = $arg_value[1];
+
+                $tag .= Html::element(
+                    'input',
+                    $nattrs
+                );
+            }
 
-				$nattrs['name'] = $arg_value[0];
-				$nattrs['value'] = $arg_value[1];
+            return $parser->insertStripItem($tag);
+        } else {
+            return '';
+        }
+    }
+
+    public static function process_aselect(&$parser, $frame, $args)
+    {
+
+        $attrs = array();
+
+        $attrs_ref = array( "name", "size", "multiple" );
+        $attrs_pseudo = array( "names", "values", "selected", "sep" );
+        $store = array();
+        $separator = ",";
+
+        foreach ($args as $arg) {
+            $arg_clean = trim($frame->expand($arg));
+            $arg_proc = explode("=", $arg_clean, 2);
+
+            if (count($arg_proc) == 1) {
+                $text = trim($arg_proc[0]);
+            } else {
+
+                if (in_array(trim($arg_proc[0]), self::$attrs_ref_common)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
+
+                if (in_array(trim($arg_proc[0]), $attrs_ref)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
 
-				$tag.= Html::element(
-				'input',
-					$nattrs
-				);
-			}
+                // We store pseudo values here
+                if (in_array(trim($arg_proc[0]), $attrs_pseudo)) {
+                    $store[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
+
+                foreach (self::$attrs_like as $attr_like) {
+                    if (strpos($arg_proc[0], $attr_like) === 0) {
+                        $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                    }
+                }
+            }
+        }
+
+        $tag = 	Html::openElement(
+            'select',
+            $attrs
+        );
 
-			return $parser->insertStripItem( $tag, $parser->mStripState );
-		} else {
-			return '';
-		}
-	}
+        if (array_key_exists("sep", $store)) {
+            $separator = $store["sep"];
+        }
+
+        if (array_key_exists("values", $store)) {
+
+            // Let's split
+            $values = explode($separator, $store["values"]);
+            $names = array();
+            $selected = array();
 
-	public static function process_aselect( &$parser, $frame, $args ) {
+            if (count($values) > 0) {
+                // We have stuff
 
-		$attrs = array();
-
-		$attrs_ref = array( "name", "size", "multiple" );
-		$attrs_pseudo = array( "names", "values", "selected", "sep" );
-		$store = array();
-		$separator = ",";
-
-		foreach ( $args as $arg ) {
-			$arg_clean = trim( $frame->expand( $arg ) );
-			$arg_proc = explode( "=", $arg_clean, 2 );
-
-			if ( count( $arg_proc ) == 1 ){
-				$text = trim( $arg_proc[0] );
-			} else {
-
-				if ( in_array( trim( $arg_proc[0] ), self::$attrs_ref_common ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
+                if (array_key_exists("names", $store)) {
 
-				if ( in_array( trim( $arg_proc[0] ), $attrs_ref ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
+                    $names = explode($separator, $store["names"]);
+                }
 
-				// We store pseudo values here
-				if ( in_array( trim( $arg_proc[0] ), $attrs_pseudo ) ) {
-					$store[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
+                if (array_key_exists("selected", $store)) {
 
-				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
-						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-					}
-				}
-			}
-		}
+                    $selected = explode($separator, $store["selected"]);
+                }
 
-		$tag = 	Html::openElement(
-			'select',
-				$attrs
-		);
+                for ($i = 0; $i < count($values); ++$i) {
+                    $option = self::addOption($i, $values, $names, $selected);
+                    $tag .= $option;
+                }
+            }
+        }
 
-		if ( array_key_exists("sep", $store) ) {
-			$separator = $store["sep"];
-		}
-
-		if ( array_key_exists("values", $store) ) {
+        $tag .= Html::closeElement(
+            'select',
+            $attrs
+        );
 
-			// Let's split
-			$values = explode( $separator, $store["values"] );
-			$names = array();
-			$selected = array();
+        return $parser->insertStripItem($tag);
+    }
 
-			if ( count( $values ) > 0 ) {
-				// We have stuff
+    public static function process_alabel(&$parser, $frame, $args)
+    {
 
-				if ( array_key_exists("names", $store) ) {
+        $attrs = array();
+        $text = "";
 
-					$names = explode( $separator, $store["names"] );
-				}
+        foreach ($args as $arg) {
+            $arg_clean = trim($frame->expand($arg));
+            $arg_proc = explode("=", $arg_clean, 2);
 
-				if ( array_key_exists("selected", $store) ) {
+            if (count($arg_proc) == 1) {
+                $text = trim($arg_proc[0]);
+            } else {
 
-					$selected = explode( $separator, $store["selected"] );
-				}
+                if (in_array(trim($arg_proc[0]), self::$attrs_ref_common)) {
+                    $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                }
 
-				for ($i = 0; $i < count($values); ++$i) {
-					$option = self::addOption( $i, $values, $names, $selected );
-					$tag.= $option;
-				}
-			}
-		}
+                foreach (self::$attrs_like as $attr_like) {
+                    if (strpos($arg_proc[0], $attr_like) === 0) {
+                        $attrs[ trim($arg_proc[0]) ] = trim($arg_proc[1]);
+                    }
+                }
+            }
+        }
 
-		$tag.= Html::closeElement(
-			'select',
-				$attrs
-		);
+        $tag = 	Html::element(
+            'label',
+            $attrs,
+            $text
+        );
 
-		return $parser->insertStripItem( $tag, $parser->mStripState );
-	}
+        return $parser->insertStripItem($tag);
+    }
 
-	public static function process_alabel( &$parser, $frame, $args ) {
 
-		$attrs = array();
-		$text = "";
+    private static function addOption($iter, $values, $names, $selected)
+    {
 
-		foreach ( $args as $arg ) {
-			$arg_clean = trim( $frame->expand( $arg ) );
-			$arg_proc = explode( "=", $arg_clean, 2 );
+        $option = "";
 
-			if ( count( $arg_proc ) == 1 ){
-				$text = trim( $arg_proc[0] );
-			} else {
+        if (array_key_exists($iter, $values)) {
 
-				if ( in_array( trim( $arg_proc[0] ), self::$attrs_ref_common ) ) {
-					$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-				}
+            $attrs = array();
+            if (in_array(trim($values[$iter]), $selected)) {
+                $attrs["selected"] = "selected";
+            }
 
-				foreach ( self::$attrs_like as $attr_like ) {
-					if ( strpos( $arg_proc[0], $attr_like ) === 0 ) {
-						$attrs[ trim( $arg_proc[0] ) ] = trim( $arg_proc[1] );
-					}
-				}
-			}
-		}
+            if (array_key_exists($iter, $names)) {
+                $attrs["value"] = $values[$iter];
 
-		$tag = 	Html::element(
-			'label',
-				$attrs,
-				$text
-		);
+                $option = Html::element(
+                    'option',
+                    $attrs,
+                    $names[$iter]
+                );
 
-		return $parser->insertStripItem( $tag, $parser->mStripState );
-	}
+            } else {
 
+                $option = Html::element(
+                    'option',
+                    $attrs,
+                    $values[$iter]
+                );
+            }
+        }
 
-	private static function addOption( $iter, $values, $names, $selected ) {
+        return $option;
 
-		$option = "";
-
-		if ( array_key_exists( $iter, $values ) ) {
-
-			$attrs = array();
-			if ( in_array( trim( $values[$iter] ), $selected ) ) {
-				$attrs["selected"] = "selected";
-			}
-
-			if ( array_key_exists( $iter, $names ) ) {
-				$attrs["value"] = $values[$iter];
-
-				$option = Html::element(
-					'option',
-					$attrs,
-					$names[$iter]
-				);
-
-			} else {
-
-				$option = Html::element(
-					'option',
-					$attrs,
-					$values[$iter]
-				);
-			}
-		}
-
-		return $option;
-
-	}
+    }
 
 }
